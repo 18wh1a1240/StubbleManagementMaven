@@ -37,10 +37,6 @@ public class ProductDAO {
 	}
 	
 	public int updateProduct(Product product){
-		product.setProductName(product.getProductName());
-		product.setQuantity(product.getQuantity());
-		product.setFarmer(product.getFarmer());
-		product.setPrice(product.getPrice());
 		product.setStatus("sold");
 		return HibernateTemplate.updateObject(product);
 	}

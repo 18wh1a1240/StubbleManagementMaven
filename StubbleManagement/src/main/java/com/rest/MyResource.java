@@ -13,6 +13,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -153,6 +154,17 @@ public class MyResource {
     public void addOrder(PurchaseOrder purchaseorder){
     	PurchaseOrderDAO purchaseorderDao = new PurchaseOrderDAO();
     	purchaseorderDao.register(purchaseorder);
+    	addorder1(purchaseorder.getProduct());
+    }
+    
+    @Path("purchaseOrder1")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String addorder1(Product product) {
+    	ProductDAO productDao = new ProductDAO();
+    	//Product product = productDao.getProduct(productId);
+    	productDao.updateProduct(product);
+    	return "success";
     }
     
     @Path("getAllOrders/{manufacturerId}")
@@ -261,55 +273,42 @@ public class MyResource {
 		return result;
 	}*/
     
-    @Path("sendOTP/{number}")
-  	@GET
-  	@Produces(MediaType.APPLICATION_JSON)
-    public String SendOtp(@PathParam("number") String number) {
-	   int randomPin   =(int) (Math.random()*9000)+1000; 
-       String otp  = String.valueOf(randomPin);
-       System.out.println(otp);
-		String Mobile = number;
-  		otpsending(Mobile,otp);
-  		return otp;
-  	}
-    
-   public void otpsending(String Mobile, String otp) {
-   	try {
-			// Construct data
-			System.out.println("hi: " + Mobile);
-			//String apiKey = "apikey=" + "fa2Rh0DmyRg-K93SgJN6ltt4l7lY8PURkQwcMaTEnf	";
-			String apiKey = "apikey" + "Ub4Fm42JSEM-1UttxlUn0f4wxyN9pPqWsavXlMJdtL";
-			String message = "&message=" + otp ;
-			String sender = "&sender=" + "TXTLCL";
-			String numbers = "&numbers=" + Mobile;
-			
-			// Send data
-			
-			HttpURLConnection conn = (HttpURLConnection) new URL("https://api.textlocal.in/send/?").openConnection();
-			System.out.println("hello");
-			String data = apiKey + numbers + message + sender;
-			conn.setDoOutput(true);
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
-			conn.getOutputStream().write(data.getBytes("UTF-8"));
-			final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			final StringBuffer stringBuffer = new StringBuffer();
-			String line;
-			while ((line = rd.readLine()) != null) {
-				//stringBuffer.append(line);
-				System.out.println("hello");
-			JOptionPane.showMessageDialog(null,"meassage" + line);
-			}
-			rd.close();
-			
-			//return stringBuffer.toString();
-		} catch (Exception e) {
-			//System.out.println("Error SMS "+e);
-			//return "Error "+e;
-			JOptionPane.showMessageDialog(null,e);
-		}
+    @Path("message/{manufacturerName}/{mobile}/{productName}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String get(@PathParam("manufacturerName") String manufacturerName , @PathParam("mobile") String mobile ,@PathParam("productName") String productName) {
+    try {
+		// Construct data
+    	System.out.println("date");
+		String apiKey = "apikey=" + "zrATIaOvl2E-XjjgrXGmjMY7PspKUiFpIqX9YRDLQA";
+		//Date date1 = new SimpleDateFormat("dd-MM-yyyy").parse(date);
+		//java.sql.Date sqldate = new java.sql.Date(date1.getTime());
+		String msg = "Dear customer , your product " + productName + " has been purchased by "+ manufacturerName + " .Thanks for choosing our service.";
+		System.out.println(msg);
+		String message = "&message=" + msg;
+		String sender = "&sender=" + "TXTLCL";
+		mobile = "91"+mobile;
+		String numbers = "&numbers=" + mobile;
 		
-		// TODO Auto-generated method stub
-   	
+		// Send data
+		HttpURLConnection conn = (HttpURLConnection) new URL("https://api.textlocal.in/send/?").openConnection();
+		String data = apiKey + numbers + message + sender;
+		conn.setDoOutput(true);
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
+		conn.getOutputStream().write(data.getBytes("UTF-8"));
+		final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		final StringBuffer stringBuffer = new StringBuffer();
+		String line;
+		while ((line = rd.readLine()) != null) {
+			stringBuffer.append(line);
+		}
+		rd.close();
+		
+		return stringBuffer.toString();
+	} catch (Exception e) {
+		System.out.println("Error SMS "+e);
+		return "Error "+e;
 	}
+    }
 }
