@@ -1,8 +1,9 @@
 <html>
 <body>
    
-   <p> <a href="webapi/myresource/regFarmer">Register Farmer</a>
-   <p> <a href="webapi/myresource/regProduct">Register Product</a>
+ <p> <a href="webapi/myresource1/regFarmer">Register Farmer</a>
+ <a href="webapi/myresource/sendOTP/'9515185232'">sendOTP</a>
+     <!-- <p> <a href="webapi/myresource/regProduct">Register Product</a>
    
    
    <p> <a href="webapi/myresource/getAllProducts"> All Products </a>
@@ -17,7 +18,7 @@
    <p> <a href = "webapi/myresource/sendOTP/6304933688">Send Otp</a>
    
    
-     <!-- <p> <a href="webapi/myresource/manufacturerLogin/chandana@gmail.com/password"> Manufacturer By Id </a>
+     <p> <a href="webapi/myresource/manufacturerLogin/chandana@gmail.com/password"> Manufacturer By Id </a>
      <p> <a href="webapi/myresource/getAllProducts">All Products </a>
       <p> <a href="webapi/myresource/getAllOrders">All Purchase order details </a>
       

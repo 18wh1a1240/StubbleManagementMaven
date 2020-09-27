@@ -1,6 +1,6 @@
 package com.rest;
 
-import java.io.BufferedReader;
+import java.io.BufferedReader; 
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -27,90 +27,89 @@ import com.ts.dao.FarmerDAO;
 import com.ts.dao.ManufacturerDAO;
 import com.ts.dao.ProductDAO;
 import com.ts.dao.PurchaseOrderDAO;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
 
 @Path("myresource")
 public class MyResource {
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getIt() {
-        return "Got it!";
-    }
-    // Use This myresource for your project building
-    @Path("regFarmer")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getIt() {
+		return "Got it!";
+	}
+
+	@Path("regFarmer")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-    public void registerFarmer(Farmer farmer){
-    	System.out.println("Data received in register Farmer " + farmer);
-    	FarmerDAO farmerDao = new FarmerDAO();
-    	farmerDao.register(farmer);
-    }
-    @Path("regManufacturer")
+	public void registerFarmer(Farmer farmer){
+		System.out.println("Data received in register Farmer " + farmer);
+		FarmerDAO farmerDao = new FarmerDAO();
+		farmerDao.register(farmer);
+	}
+
+	@Path("regManufacturer")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-    public void registerManufacturer(Manufacturer manufacturer){
-    	System.out.println("Data received in register Manufacturer " + manufacturer);
-    	ManufacturerDAO manufacturerDao = new ManufacturerDAO();
-    	manufacturerDao.register(manufacturer);
-    }
-    
-    
-    @Path("regProduct")
+	public void registerManufacturer(Manufacturer manufacturer){
+		System.out.println("Data received in register Manufacturer " + manufacturer);
+		ManufacturerDAO manufacturerDao = new ManufacturerDAO();
+		manufacturerDao.register(manufacturer);
+	}
+
+
+	@Path("regProduct")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-    public void registerProduct(Product product){
-    	System.out.println("Data received in register Product " + product); 	
-    	product.setStatus("available");
-    	ProductDAO productDao = new ProductDAO();
-    	productDao.register(product);
-    }
-    
-  
-    @Path("getAllFarmers")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Farmer> getAllFarmers() {
-    	System.out.println("Recieved in getAllFarmers "); 
+	public void registerProduct(Product product){
+		System.out.println("Data received in register Product " + product); 	
+		product.setStatus("available");
+		ProductDAO productDao = new ProductDAO();
+		productDao.register(product);
+	}
+
+
+	@Path("getAllFarmers")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Farmer> getAllFarmers() {
+		System.out.println("Recieved in getAllFarmers "); 
 		FarmerDAO farmerDao = new FarmerDAO();
 		List<Farmer> farmer = farmerDao.getAllFarmers();
 		System.out.println(farmer); 
 		return farmer;
 
 	}
-    
-    @Path("farmerLogin/{aadhar}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Farmer getFarmerByAadhar(@PathParam("aadhar") String aadhar){
-    	System.out.println(aadhar);
+
+	@Path("farmerLogin/{aadhar}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Farmer getFarmerByAadhar(@PathParam("aadhar") String aadhar){
+		System.out.println(aadhar);
 		System.out.println("Recieved in getFarmerByAadhar : " + aadhar ); 
 		FarmerDAO farmerDao = new FarmerDAO();
-		Farmer farmer = farmerDao.getFarmerByUserPass(aadhar);	
-		
-		
-			return farmer;
-		
-		
-		}
-    @Path("manufacturerLogin/{mailId}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Manufacturer getManufacturerByMailId(@PathParam("mailId") String mailId ){
-    	//System.out.println(aadhar);
+		Farmer farmer = farmerDao.getFarmerByUserPass(aadhar);
+		return farmer;
+	}
+
+	@Path("manufacturerLogin/{mailId}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Manufacturer getManufacturerByMailId(@PathParam("mailId") String mailId ){
 		System.out.println("Recieved in getManufacturerByMailId : " + mailId ); 
 		ManufacturerDAO manufacturerDao = new ManufacturerDAO();
 		Manufacturer manufacturer = manufacturerDao.getManufacturerByMail(mailId);	
-		//System.out.println(farmer); 
 		if(manufacturer != null) {
 			return manufacturer;
 		} else {
 			return null;
 		}
-		
-		}
-    
-    
-    @Path("getAllProducts")
+
+	}
+
+
+	@Path("getAllProducts")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Product> getallProducts() {
@@ -120,54 +119,26 @@ public class MyResource {
 		System.out.println(products); 
 		return products;
 	}
-    
-    /*@Path("purchaseOrder")
+
+	@Path("purchaseOrder")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-    public void addOrder(List<Product> products, Manufacturer manufacturer){
-    	//int res = 0;
-    	PurchaseOrderDAO purchaseOrderDao = new PurchaseOrderDAO();
-    	//ProductDAO productDao = new ProductDAO();
-    	long millis=System.currentTimeMillis ();
-    	java.sql.Date date=new java.sql.Date (millis);
-    	
-    	//System.out.println (date);
-    	//Product pro = new Product();
-    	for(Product pro: products) {
-    		//SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
-    	    //Date date = new Date();  
-    		PurchaseOrder po = new PurchaseOrder();
-    		po.setPrice(pro.getPrice());
-    		po.setQuantity(pro.getQuantity());
-    		po.setProduct(pro);
-    		po.setDateOfPurchase(date);
-    		po.setDateOfDelivery(date);
-    		po.setManufacturer(manufacturer);
-    		purchaseOrderDao.register(po);
-    	}
-    	//return res;
-    }*/
-    
-    @Path("purchaseOrder")
-	@POST
+	public void addOrder(PurchaseOrder purchaseorder){
+		PurchaseOrderDAO purchaseorderDao = new PurchaseOrderDAO();
+		purchaseorderDao.register(purchaseorder);
+		addorder1(purchaseorder.getProduct());
+	}
+
+	@Path("purchaseOrder1")
+	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-    public void addOrder(PurchaseOrder purchaseorder){
-    	PurchaseOrderDAO purchaseorderDao = new PurchaseOrderDAO();
-    	purchaseorderDao.register(purchaseorder);
-    	addorder1(purchaseorder.getProduct());
-    }
-    
-    @Path("purchaseOrder1")
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public String addorder1(Product product) {
-    	ProductDAO productDao = new ProductDAO();
-    	//Product product = productDao.getProduct(productId);
-    	productDao.updateProduct(product);
-    	return "success";
-    }
-    
-    @Path("getAllOrders/{manufacturerId}")
+	public String addorder1(Product product) {
+		ProductDAO productDao = new ProductDAO();
+		productDao.updateProduct(product);
+		return "success";
+	}
+
+	@Path("getAllOrders/{manufacturerId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PurchaseOrder> getAllOrders(@PathParam("manufacturerId") int manufacturerId) {
@@ -177,138 +148,100 @@ public class MyResource {
 		//System.out.println(purchaseOrder); 
 		return purchaseOrder;
 	}
-    
-    @Path("getProductByFarmerId/{farmerId}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Product> getFarmerByAadhar(@PathParam("farmerId") int farmerId){
-    	//System.out.println(aadhar);
-		//System.out.println("Recieved in getFarmerByAadhar : " + aadhar + password); 
+
+	@Path("getProductByFarmerId/{farmerId}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Product> getFarmerByAadhar(@PathParam("farmerId") int farmerId){
 		ProductDAO productDao = new ProductDAO();
 		List<Product> product = productDao.getProducts(farmerId);		
-			return product;		
-		}
-    
-    @Path("deleteproduct/{productId}")
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    public void deleteProduct(@PathParam("productId") int productId){
+		return product;		
+	}
+
+	@Path("deleteproduct/{productId}")
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	public void deleteProduct(@PathParam("productId") int productId){
 		ProductDAO productDao = new ProductDAO();
 		int result = productDao.deleteProduct(Product.class,productId);
 		System.out.println("delete product " + result);
-				
-		}
-    
-   /* @Path("Email")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public static List<String> hello(List<String> mailList,Manufacturer manufacturer) throws MessagingException {
-		System.out.println("in myresource");
-		//Address venue = event.getAddress();
-		
-		MimeMultipart content = new MimeMultipart("related");
-		
-		
-		String subject="Stubble Management: ";
-		String body="write body here";
-		
-		List<String> result = null; 
-		System.out.println(mailList);
-		System.out.println(mailList.size());
-			String host = "smtp.gmail.com";
-			String from = "stubblemanagement730@gmail.com";
-			String pass = "Stubble@123";
-			Properties props = System.getProperties();
-			props.put("mail.smtp.starttls.enable", "true"); // added this line
-			props.put("mail.smtp.host", host);
-			props.put("mail.smtp.user", from);
-			props.put("mail.smtp.password", pass);
-			props.put("mail.smtp.port", "587");
-			props.put("mail.smtp.auth", "true");
-			List<String> to = mailList; // added this line
-			Session session = Session.getDefaultInstance(props, null);
-			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(from));
 
-			InternetAddress[] toAddress = new InternetAddress[to.size()];
-
-			// To get the array of addresses
-
-			for( int i=0; i < to.size(); i++ )
-			{
-				// changed from a while loop
-				toAddress[i] = new InternetAddress(to.get(i));
-			}
-
-			for( int i=0; i < toAddress.length; i++)
-			{
-				// changed from a while loop
-				message.addRecipient(Message.RecipientType.TO, toAddress[i]);
-			}
-
-			message.setSubject(subject);
-			//message.setText(body);
-			// This mail has 2 part, the BODY and the embedded image
-	         MimeMultipart multipart = new MimeMultipart("related");
-
-	         // first part (the html)
-	         MimeBodyPart messageBodyPart = new MimeBodyPart();
-	        
-	         messageBodyPart.setContent(body, "text/html");
-	         // add it
-	         multipart.addBodyPart(messageBodyPart);
-
-	         
-	         message.setContent(multipart);
-			//message.setContent(content);
-			Transport transport = session.getTransport("smtp");
-
-			transport.connect(host, from, pass);
-			transport.sendMessage(message, message.getAllRecipients());
-
-			transport.close();
-			System.out.println("success");
-			result.add("success");
-		System.out.println(result);
-		return result;
-	}*/
-    
-    @Path("message/{manufacturerName}/{mobile}/{productName}")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("manufacturerName") String manufacturerName , @PathParam("mobile") String mobile ,@PathParam("productName") String productName) {
-    try {
-		// Construct data
-    	System.out.println("date");
-		String apiKey = "apikey=" + "zrATIaOvl2E-XjjgrXGmjMY7PspKUiFpIqX9YRDLQA";
-		//Date date1 = new SimpleDateFormat("dd-MM-yyyy").parse(date);
-		//java.sql.Date sqldate = new java.sql.Date(date1.getTime());
-		String msg = "Dear customer , your product " + productName + " has been purchased by "+ manufacturerName + " .Thanks for choosing our service.";
-		System.out.println(msg);
-		String message = "&message=" + msg;
-		String sender = "&sender=" + "TXTLCL";
-		mobile = "91"+mobile;
-		String numbers = "&numbers=" + mobile;
-		
-		// Send data
-		HttpURLConnection conn = (HttpURLConnection) new URL("https://api.textlocal.in/send/?").openConnection();
-		String data = apiKey + numbers + message + sender;
-		conn.setDoOutput(true);
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
-		conn.getOutputStream().write(data.getBytes("UTF-8"));
-		final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		final StringBuffer stringBuffer = new StringBuffer();
-		String line;
-		while ((line = rd.readLine()) != null) {
-			stringBuffer.append(line);
-		}
-		rd.close();
-		
-		return stringBuffer.toString();
-	} catch (Exception e) {
-		System.out.println("Error SMS "+e);
-		return "Error "+e;
 	}
-    }
+
+
+	@Path("message/{manufacturerName}/{mobile}/{productName}")
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String get(@PathParam("manufacturerName") String manufacturerName , @PathParam("mobile") String mobile ,@PathParam("productName") String productName) {
+		try {
+			System.out.println("date");
+			String apiKey = "apikey=" + "Bo3nqmO0QzQ-7tH7ABcAuQ8qkMN0HeKi5J9dsuuQrS";
+			String msg = "Dear customer , your product " + productName + " has been purchased by "+ manufacturerName + " .Thanks for choosing our service.";
+			System.out.println(msg);
+			String message = "&message=" + msg;
+			String sender = "&sender=" + "TXTLCL";
+			mobile = "91"+mobile;
+			String numbers = "&numbers=" + mobile;
+
+			HttpURLConnection conn = (HttpURLConnection) new URL("https://api.textlocal.in/send/?").openConnection();
+			String data = apiKey + numbers + message + sender;
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
+			conn.getOutputStream().write(data.getBytes("UTF-8"));
+			final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			final StringBuffer stringBuffer = new StringBuffer();
+			String line;
+			while ((line = rd.readLine()) != null) {
+				stringBuffer.append(line);
+			}
+			rd.close();
+
+			return stringBuffer.toString();
+		} catch (Exception e) {
+			System.out.println("Error SMS "+e);
+			return "Error "+e;
+		}
+	}
+	
+	@Path("sendOTP/{number}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public int sendOtp(@PathParam("number") String number) {
+		int otp = (int)(Math.random() * 9000) + 1000;
+		System.out.println(number + "-" + otp);
+		/*Twilio.init("AC094a89e7c0864d27268f9dd9715943df", "SKc9a036d28a0fc2eb1b6c09b5fd7e6e9d");
+		Message message = Message.creator(new PhoneNumber("+91"+ number), new PhoneNumber("+9515185232"), "\n\nHello, Your otp - " + otp).create();
+		System.out.println(message.getSid());*/
+		try {
+			System.out.println("date");
+			String apiKey = "apikey=" + "Bo3nqmO0QzQ-7tH7ABcAuQ8qkMN0HeKi5J9dsuuQrS";
+			String msg = "Dear customer , Hello, Your otp - " + otp + "\n\nFrom Stubble Management";
+			System.out.println(msg);
+			String message = "&message=" + msg;
+			String sender = "&sender=" + "TXTLCL";
+			number = "91"+ number;
+			String numbers = "&numbers=" + number;
+
+			HttpURLConnection conn = (HttpURLConnection) new URL("https://api.textlocal.in/send/?").openConnection();
+			String data = apiKey + numbers + message + sender;
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
+			conn.getOutputStream().write(data.getBytes("UTF-8"));
+			final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			final StringBuffer stringBuffer = new StringBuffer();
+			String line;
+			while ((line = rd.readLine()) != null) {
+				stringBuffer.append(line);
+			}
+			rd.close();
+			return otp;
+		} catch (Exception e) {
+			System.out.println("Error SMS "+e);
+			return 0;
+		}
+		
+	}
+		
 }

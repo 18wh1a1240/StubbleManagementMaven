@@ -29,22 +29,26 @@ public class MyResource1 {
 	public String getIt() {
 		return "Got it!";
 	}
-	/*@Path("regFarmer")
+	
+	@Path("regFarmer")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String registerFarmer() {
-		Farmer farmer=new Farmer();		
+		FarmerDAO farmerDao = new FarmerDAO();
+		/*Farmer farmer=new Farmer();		
 		farmer.setFarmerName("suga");
 		farmer.setAddress("UttarPradesh");
 		farmer.setMobile("9410236579");
-		farmer.setPassword("suga123");
-		//farmer.setPassbookId("SD1238685957");
+    	farmer.setPassword(farmerDao.hashPassword("suga123"));
 		farmer.setAadhar("5996 1452 3578");
 		
-		FarmerDAO farmerDao = new FarmerDAO();
-		farmerDao.register(farmer);
+		farmerDao.register(farmer);*/
+		if(farmerDao.checkPass("suga12", "$2a$10$ZSti1ubmsuHZefyf37dnvONgdq7CjR4vgiCEJYvi9f9A6oj.HaWiK")) {
 		return "Success";
-	}*/
+		} else {
+			return "fail";
+		}
+	}
 	
 	@Path("regProduct")
 	@GET
@@ -70,11 +74,9 @@ public class MyResource1 {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Farmer> getAllFarmer() {
-		//Farmer farmerList = new Farmer();
 		System.out.println("Recieved in getAllFarmers "); 
 		FarmerDAO farmerDao = new FarmerDAO();
 		List<Farmer> farmer = farmerDao.getAllFarmers();
-		//System.out.println(farmer); 
 		return farmer;
 
 	}
@@ -91,7 +93,7 @@ public class MyResource1 {
 		return product;
 	}
 	
-	/*@Path("getFarmerById/{farmerId}")
+	@Path("getFarmerById/{farmerId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Farmer getFarmerById(@PathParam("farmerId") int farmerId){
@@ -100,7 +102,7 @@ public class MyResource1 {
 		Farmer farmer = farmerDao.getFarmer(farmerId);	
 		System.out.println(farmer); 
 		return farmer;
-		}*/
+	}
 	
 	@Path("getProductById/{productId}")
 	@GET

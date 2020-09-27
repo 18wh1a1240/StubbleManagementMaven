@@ -1,9 +1,9 @@
 package com.ts.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.rest.dto.Farmer;
 import com.ts.db.HibernateTemplate;
@@ -32,19 +32,14 @@ public class FarmerDAO {
 		return (Farmer)HibernateTemplate.getObject(Farmer.class, id);
 	}
 
+	public String hashPassword(String plainTextPassword){
+		return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
+	}
 
-	/*public void getFarmers(int productId) {
-		String query= "from Farmer where producttId = 1";
-		System.out.println("get farmers is called...");
-		List<Object> obj = (List<Object>) HibernateTemplate.getObjectListByQuery(query);
-		System.out.println("Testing get farmers :" + obj); 
-		for(Object f: obj){
-			Farmer farmer = (Farmer)f;
-			System.out.println(farmer.getFarmerName());
-		}
-	}*/
-
-	/*public Farmer getEmpByEmail(String email) {
-		return (Farmer)HibernateTemplate.getObjectByEmail(email);
-	}*/
+	public boolean checkPass(String plainPassword, String hashedPassword) {
+		if (BCrypt.checkpw(plainPassword, hashedPassword))
+			return true;
+		else
+			return false;
+	}
 }
