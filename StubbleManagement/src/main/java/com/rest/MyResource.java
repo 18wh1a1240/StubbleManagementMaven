@@ -55,7 +55,8 @@ public class MyResource {
 	public void registerManufacturer(Manufacturer manufacturer){
 		System.out.println("Data received in register Manufacturer " + manufacturer);
 		ManufacturerDAO manufacturerDao = new ManufacturerDAO();
-		manufacturerDao.register(manufacturer);
+		//manufacturerDao.register(manufacturer);
+		manufacturerDao.sendEmail(manufacturer);
 	}
 
 
@@ -241,7 +242,7 @@ public class MyResource {
 			System.out.println("Error SMS "+e);
 			return 0;
 		}
-		
 	}
-		
+	
+	
 }
