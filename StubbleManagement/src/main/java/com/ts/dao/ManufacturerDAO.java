@@ -37,7 +37,7 @@ public class ManufacturerDAO {
 		return (Manufacturer)HibernateTemplate.getObject(Manufacturer.class,id);
 	}
 	
-	public void sendEmail(Manufacturer manufacturer) {
+	/*public void sendEmail(Manufacturer manufacturer) {
 
 		System.out.println("In mail sending");
 
@@ -73,6 +73,6 @@ public class ManufacturerDAO {
 		       } catch (MessagingException e) {
 		           e.printStackTrace();
 		       }
-		   }
+		   }*/
 
 }

@@ -55,8 +55,8 @@ public class MyResource {
 	public void registerManufacturer(Manufacturer manufacturer){
 		System.out.println("Data received in register Manufacturer " + manufacturer);
 		ManufacturerDAO manufacturerDao = new ManufacturerDAO();
-		//manufacturerDao.register(manufacturer);
-		manufacturerDao.sendEmail(manufacturer);
+		manufacturerDao.register(manufacturer);
+		//manufacturerDao.sendEmail(manufacturer);
 	}
 
 
@@ -176,7 +176,7 @@ public class MyResource {
 	public String get(@PathParam("manufacturerName") String manufacturerName , @PathParam("mobile") String mobile ,@PathParam("productName") String productName) {
 		try {
 			System.out.println("date");
-			String apiKey = "apikey=" + "Bo3nqmO0QzQ-7tH7ABcAuQ8qkMN0HeKi5J9dsuuQrS";
+			String apiKey = "apikey=" + "Bo3nqmO0QzQ-uvv0plYpcqW1HgCoLcImLCPQ9WCQwC";
 			String msg = "Dear customer , your product " + productName + " has been purchased by "+ manufacturerName + " .Thanks for choosing our service.";
 			System.out.println(msg);
 			String message = "&message=" + msg;
@@ -216,7 +216,7 @@ public class MyResource {
 		System.out.println(message.getSid());*/
 		try {
 			System.out.println("date");
-			String apiKey = "apikey=" + "Bo3nqmO0QzQ-7tH7ABcAuQ8qkMN0HeKi5J9dsuuQrS";
+			String apiKey = "apikey=" + "Bo3nqmO0QzQ-uvv0plYpcqW1HgCoLcImLCPQ9WCQwC";
 			String msg = "Dear customer , Hello, Your otp - " + otp + "\n\nFrom Stubble Management";
 			System.out.println(msg);
 			String message = "&message=" + msg;
